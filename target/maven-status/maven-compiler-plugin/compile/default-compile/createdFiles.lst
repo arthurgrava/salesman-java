@@ -1,0 +1,16 @@
+org/arthur/salesman/model/Similar.class
+org/arthur/salesman/errors/FilePatternException.class
+org/arthur/salesman/comparator/Correlation.class
+org/arthur/salesman/comparator/Pearson.class
+org/arthur/salesman/Main.class
+org/arthur/salesman/reader/SimilarityReader.class
+org/arthur/salesman/coauthors/CoauthorsSeeker.class
+org/arthur/salesman/runner/SimilarityComparator.class
+org/arthur/salesman/runner/CoauthorsCalculator.class
+org/arthur/salesman/recommender/Recommender.class
+org/arthur/salesman/model/Similarity.class
+org/arthur/salesman/model/Citation.class
+org/arthur/salesman/recommender/UserBased.class
+org/arthur/salesman/model/Recommendation.class
+org/arthur/salesman/runner/RecommendationCalculator.class
+org/arthur/salesman/reader/CitationReader.class
