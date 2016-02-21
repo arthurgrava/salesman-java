@@ -1,5 +1,7 @@
 
-# Created by https://www.gitignore.io/api/java,intellij
+# Created by https://www.gitignore.io/api/aven,java,intellij
+
+#!! ERROR: aven is undefined. Use list command to see defined gitignore types !!#
 
 ### Java ###
 *.class
@@ -44,6 +46,11 @@ hs_err_pid*
 
 # Mongo Explorer plugin:
 # .idea/mongoSettings.xml
+
+# maven
+target/
+target
+target/*
 
 ## File-based project format:
 *.ipr
