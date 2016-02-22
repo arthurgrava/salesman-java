@@ -1,0 +1,10 @@
+#!/bin/bash
+export SALESMAN_DEBUG='true'
+
+JARPATH=$1
+AUTHORS=$2
+TARGET=$3
+THREADS=$4
+TOPK=$5
+
+java -jar $JARPATH similarity $AUTHORS $TARGET 1 $THREADS $TOPK

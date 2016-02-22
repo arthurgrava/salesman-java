@@ -1,0 +1,10 @@
+#!/bin/bash
+export SALESMAN_DEBUG='true'
+
+JARPATH=$1
+FILEPAH=$2
+N_AUTHORS=$3
+N_ARTICLES=$4
+TARGET=$5
+
+java -jar $JARPATH coauthors $FILEPAH $N_AUTHORS $N_ARTICLES $TARGET
