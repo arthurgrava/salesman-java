@@ -11,29 +11,34 @@ import java.io.IOException;
  */
 public class Main {
 
+    private static void printHelp() {
+        System.out.println("Run this app properly by:\n\tjava -jar file.jar {application} {parameters}\n\t" +
+                "Available apps are: coauthors, similarity");
+    }
+
     public static void main(String... args) throws Exception {
         if (args.length > 0) {
             String first = args[0];
 
             if ("--help".equalsIgnoreCase(first) || "-h".equalsIgnoreCase(first)) {
-                System.out.println("java -jar file.jar {application} {parameters}");
+                printHelp();
             } else if ("similarity".equals(first.toLowerCase())) {
                 runSimilarityApp(args);
             } else if ("coauthors".equals(first.toLowerCase())) {
                 runCoauthorsApp(args);
             } else {
-                System.out.println("java -jar file.jar {application} {parameters}");
+                printHelp();
             }
         } else {
-            System.out.println("java -jar file.jar {application} {parameters}");
+            printHelp();
         }
     }
 
     private static void runCoauthorsApp(String... args) throws IOException {
         if (args.length < 5) {
             System.out.println(
-                "Missing parameters, to run properly please input:\n-----\n\t" +
-                "java -jar file.jar coauthors {publicationsPath} {nAuthors} {nArticles} {coauthorsPath}"
+                    "Missing parameters, to run properly please input:\n-----\n\t" +
+                            "java -jar file.jar coauthors {publicationsPath} {nAuthors} {nArticles} {coauthorsPath}"
             );
             System.exit(2);
         }
@@ -54,8 +59,8 @@ public class Main {
     private static void runSimilarityApp(String... args) throws IOException {
         if (args.length < 6) {
             System.out.println(
-                "Missing parameters, to run properly please input:\n-----\n\t" +
-                "java -jar file.jar similarity {filePath} {targetPath} {coreSize} {maxSize} {topK}"
+                    "Missing parameters, to run properly please input:\n-----\n\t" +
+                            "java -jar file.jar similarity {filePath} {targetPath} {coreSize} {maxSize} {topK} {begin} {end}"
             );
             System.exit(2);
         }
@@ -65,14 +70,16 @@ public class Main {
         int coreSize = Integer.parseInt(args[3]);
         int maxSize = Integer.parseInt(args[4]);
         int topK = Integer.parseInt(args[5]);
+        int begin = Integer.parseInt(args[6]);
+        int end = Integer.parseInt(args[7]);
         boolean debug = isDebugMode();
 
         SimilarityComparator sc = new SimilarityComparator(coreSize, maxSize, debug);
-        sc.execute(filePath, targetPath, topK);
+        sc.execute(filePath, targetPath, topK, begin, end);
     }
 
     private static boolean isDebugMode() {
-        String debugging = System.getenv("SALESMAN_DEGUB");
+        String debugging = System.getenv("SALESMAN_DEBUG");
 
         return StringUtils.isNotBlank(debugging) && debugging.equals("true");
     }

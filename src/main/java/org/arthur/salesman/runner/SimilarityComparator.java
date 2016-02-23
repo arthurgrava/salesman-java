@@ -42,12 +42,12 @@ public class SimilarityComparator {
      * @param targetPath
      * @param topK
      */
-    public void execute(String filePath, String targetPath, int topK) throws IOException {
+    public void execute(String filePath, String targetPath, int topK, int begin, int end) throws IOException {
         BufferedWriter br = null;
         try {
             System.out.printf(
-                    "Starting to run program, parameters are: input \"%s\", target \"%s\", core %d, max %d, k %d, debug %s\n",
-                    filePath, targetPath, coreSize, maxSize, topK, (debug + "")
+                    "Starting to run program, parameters are: input \"%s\", target \"%s\", core %d, max %d, k %d, debug %s, begin %d, end %d\n",
+                    filePath, targetPath, coreSize, maxSize, topK, (debug + ""), begin, end
             );
 
             Map<String, List<Citation>> citations = CitationReader.readFile(filePath);
@@ -60,22 +60,29 @@ public class SimilarityComparator {
             System.out.println("Comparison will definitely start now");
 
             Set<String> keys = citations.keySet();
-            for (String keyA : keys) {
-                boolean running = false;
-                while (!running) {
-                    try {
-                        int n = executor.getMaximumPoolSize() - executor.getActiveCount();
-                        if (n <= 1) {
-                            Thread.sleep(50);
-                            continue;
+
+            if (keys.size() > begin && keys.size() <= end) {
+                int count = 0;
+                for (String keyA : keys) {
+                    if (count >= begin && count <= end) {
+                        boolean running = false;
+                        while (!running) {
+                            try {
+                                int n = executor.getMaximumPoolSize() - executor.getActiveCount();
+                                if (n <= 1) {
+                                    Thread.sleep(50);
+                                    continue;
+                                }
+                                executor.execute(new Correlation(keyA, citations, topK, br, debug));
+                                running = true;
+                            } catch (RejectedExecutionException e) {
+                                // do nothing
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                        executor.execute(new Correlation(keyA, citations, topK, br, debug));
-                        running = true;
-                    } catch (RejectedExecutionException e) {
-                        // do nothing
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                    count++;
                 }
             }
 
