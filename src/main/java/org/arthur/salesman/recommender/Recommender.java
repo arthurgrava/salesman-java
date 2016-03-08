@@ -64,8 +64,6 @@ public class Recommender implements Runnable {
         }
 
         writeOnFile(predictions);
-
-
     }
 
     private void writeOnFile(List<String> predictions) throws IOException {
@@ -94,10 +92,10 @@ public class Recommender implements Runnable {
 
         for (Similar similar : similars) {
             double ratingItem = getRating(similar.getAuthorId(), item);
-            double similarMean = this.means.get(similar.getAuthorId());
+            double similarMean = getMean(similar);
 
             if (ratingItem != WRONG) {
-                up += (similar.getScore() * (similarMean + ratingItem));
+                up += (similar.getScore() * (ratingItem - similarMean));
                 down += similar.getScore();
             }
         }
@@ -110,6 +108,11 @@ public class Recommender implements Runnable {
         return this.means.get(this.mainAuthor) + (up / down);
     }
 
+    private Double getMean(Similar similar) {
+        String authorId = similar.getAuthorId();
+        return this.means.containsKey(authorId) ? this.means.get(authorId) : WRONG;
+    }
+
     /**
      * Gets the rating of a similar user to {@link this.mainAuthor} on the specified item
      *
@@ -120,9 +123,11 @@ public class Recommender implements Runnable {
     private double getRating(String authorId, String item) {
         List<Citation> temp = this.ratings.get(authorId);
 
-        for (Citation citation : temp) {
-            if (item.equals(citation.getArticleId())) {
-                return citation.getScore();
+        if (temp != null) {
+            for (Citation citation : temp) {
+                if (item.equals(citation.getArticleId())) {
+                    return citation.getScore();
+                }
             }
         }
 
@@ -139,9 +144,15 @@ public class Recommender implements Runnable {
         List <String> unrated = new ArrayList<>();
 
         for (Similar similar : this.similars) {
-            for (Citation citation : this.ratings.get(similar.getAuthorId())) {
-                if (!rated.contains(citation) && !unrated.contains(citation.getArticleId())) {
-                    unrated.add(citation.getArticleId());
+            String authorId = similar.getAuthorId();
+            if (!this.ratings.containsKey(authorId)) {
+                continue;
+            }
+            if (rated != null) {
+                for (Citation citation : this.ratings.get(authorId)) {
+                    if (!rated.contains(citation) && !unrated.contains(citation.getArticleId())) {
+                        unrated.add(citation.getArticleId());
+                    }
                 }
             }
         }

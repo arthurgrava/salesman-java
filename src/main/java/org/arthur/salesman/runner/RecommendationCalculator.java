@@ -3,6 +3,7 @@ package org.arthur.salesman.runner;
 import org.arthur.salesman.model.Citation;
 import org.arthur.salesman.model.Similar;
 import org.arthur.salesman.reader.CitationReader;
+import org.arthur.salesman.reader.MeansReader;
 import org.arthur.salesman.reader.SimilarityReader;
 import org.arthur.salesman.recommender.Recommender;
 
@@ -25,9 +26,10 @@ public class RecommendationCalculator {
 
     }
 
-    public void execute(String citationsPath, String similarsPath, String target) throws Exception {
+    public void execute(String citationsPath, String similarsPath, String meansFile, String target) throws Exception {
         BufferedWriter bw = null;
         try {
+            Map<String, Double> means = MeansReader.readFile(meansFile);
             Map<String, List<Similar>> similarities = SimilarityReader.readFile(similarsPath);
             Map<String, List<Citation>> citations = CitationReader.readFile(citationsPath);
 
@@ -49,7 +51,7 @@ public class RecommendationCalculator {
                         // calculates the recommendations
                         tpe.execute(
                                 new Recommender(
-                                        authorId, citations, similarities.get(authorId), bw, new HashMap<String, Double>()
+                                        authorId, citations, similarities.get(authorId), bw, means
                                 )
                         );
                         running = true;
@@ -82,9 +84,10 @@ public class RecommendationCalculator {
 
     public static void main(String... args) throws Exception {
         new RecommendationCalculator().execute(
-                "/Users/tutu/personal/git/data/samples/ratings.csv",
-                "/Users/tutu/personal/git/data/samples/similars.csv",
-                "/Users/tutu/personal/git/data/samples/teste.csv"
+                "/home/arthur/work/data/normalized/citations_sample.csv",
+                "/home/arthur/work/data/normalized/similars_1line_sample.csv",
+                "/home/arthur/work/data/normalized/authors_means_24.csv",
+                "/home/arthur/work/data/normalized/exec_sample_test.csv"
         );
     }
 

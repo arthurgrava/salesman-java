@@ -24,7 +24,7 @@ public class CoauthorsSeekerTest {
         CoauthorsSeeker cs = new CoauthorsSeeker(path, numberOfAuthors, numberOfArticles, separator);
 
         try {
-            cs.calculate();
+            cs.calculate(true);
         } catch (Exception e) {
             Assert.fail();
         }
