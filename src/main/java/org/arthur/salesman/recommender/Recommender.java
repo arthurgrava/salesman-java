@@ -19,16 +19,18 @@ public class Recommender implements Runnable {
     private List<Similar> similars;
     private Map<String, Double> means;
     private BufferedWriter writer;
+    private boolean debug;
 
     private static final double WRONG = -999;
 
     public Recommender(String mainAuthor, Map<String, List<Citation>> ratings, List<Similar> similars,
-                       BufferedWriter bw, Map<String, Double> means) {
+                       BufferedWriter bw, Map<String, Double> means, boolean debug) {
         this.mainAuthor = mainAuthor;
         this.ratings = ratings;
         this.similars = similars;
         this.writer = bw;
         this.means = means;
+        this.debug = debug;
     }
 
     @Override
@@ -69,6 +71,9 @@ public class Recommender implements Runnable {
     private void writeOnFile(List<String> predictions) throws IOException {
         if (this.writer != null) {
             for (String line : predictions) {
+                if (debug) {
+                    System.out.println(line);
+                }
                 this.writer.write(line);
                 this.writer.newLine();
             }

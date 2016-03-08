@@ -28,7 +28,7 @@ public class RecommenderTest {
     @Test
     public void testCase() {
         String authorId = citations.keySet().iterator().next();
-        Recommender rec = new Recommender(authorId, citations, similars.get(authorId), null, means);
+        Recommender rec = new Recommender(authorId, citations, similars.get(authorId), null, means, true);
         rec.run();
 
         Assert.assertTrue(1 == 1);

@@ -22,8 +22,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class RecommendationCalculator {
 
-    public RecommendationCalculator() {
+    private boolean debug;
+    private int coreSize;
+    private int maxSize;
 
+    public RecommendationCalculator(boolean debug, int coreSize, int maxSize) {
+        this.debug = debug;
+        this.coreSize = coreSize;
+        this.maxSize = maxSize;
     }
 
     public void execute(String citationsPath, String similarsPath, String meansFile, String target) throws Exception {
@@ -33,7 +39,7 @@ public class RecommendationCalculator {
             Map<String, List<Similar>> similarities = SimilarityReader.readFile(similarsPath);
             Map<String, List<Citation>> citations = CitationReader.readFile(citationsPath);
 
-            ThreadPoolExecutor tpe = new ThreadPoolExecutor(3, 3, 1, TimeUnit.MILLISECONDS, new ArrayBlockingQueue
+            ThreadPoolExecutor tpe = new ThreadPoolExecutor(coreSize, maxSize, 1, TimeUnit.MILLISECONDS, new ArrayBlockingQueue
                     <Runnable>(1));
 
             bw = new BufferedWriter(new FileWriter(target));
@@ -51,7 +57,7 @@ public class RecommendationCalculator {
                         // calculates the recommendations
                         tpe.execute(
                                 new Recommender(
-                                        authorId, citations, similarities.get(authorId), bw, means
+                                        authorId, citations, similarities.get(authorId), bw, means, debug
                                 )
                         );
                         running = true;
@@ -83,7 +89,7 @@ public class RecommendationCalculator {
     }
 
     public static void main(String... args) throws Exception {
-        new RecommendationCalculator().execute(
+        new RecommendationCalculator(true, 3, 3).execute(
                 "/home/arthur/work/data/normalized/citations_sample.csv",
                 "/home/arthur/work/data/normalized/similars_1line_sample.csv",
                 "/home/arthur/work/data/normalized/authors_means_24.csv",

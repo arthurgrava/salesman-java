@@ -6,7 +6,7 @@
 
     <groupId>arthur</groupId>
     <artifactId>salesman-java</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 
     <dependencies>
         <dependency>
@@ -52,7 +52,7 @@
                     <configuration>
                         <archive>
                             <manifest>
-                                <mainClass>org.arthur.salesman.Main</mainClass>
+                                <mainClass>org.arthur.salesman.App</mainClass>
                             </manifest>
                         </archive>
                         <descriptorRefs>
