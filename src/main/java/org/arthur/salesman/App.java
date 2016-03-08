@@ -4,9 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.arthur.salesman.runner.RecommendationCalculator;
 
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Properties;
 
 /**
@@ -32,38 +29,9 @@ public class App {
             System.err.println("You must specify the app on your config file");
         } else {
             if ("usercf".equals(app)) {
-                runUserCf();
+                RecommendationCalculator.getCalculator(props, isDebug()).execute();
             }
         }
-    }
-
-    private static void runUserCf() throws Exception {
-        String citations = props.getProperty("citations.path");
-        String similarity = props.getProperty("similarity.path");
-        String means = props.getProperty("means.path");
-        String target = props.getProperty("target.path");
-
-        int coreThreads = Integer.parseInt(props.getProperty("core.size"));
-        int maxThreads = Integer.parseInt(props.getProperty("max.size"));
-
-        if (StringUtils.isNoneBlank(citations, similarity, means, target)) {
-            System.out.println("Configurations are: " +
-                    join("\n\t", citations, similarity, means, target, coreThreads, maxThreads, isDebug())
-            );
-            RecommendationCalculator rc = new RecommendationCalculator(isDebug(), coreThreads, maxThreads);
-            rc.execute(citations, similarity, means, target);
-        } else {
-            System.err.println("To run usercf you need to specify citations.path, similarity.path, " +
-                    "means.path and target.path");
-        }
-    }
-
-    private static String join(String separator, Object... words) {
-        String joined = "";
-        for (Object word : words) {
-            joined += (word.toString() + separator);
-        }
-        return joined.substring(0, joined.length() - separator.length());
     }
 
     private static void printHelp() {

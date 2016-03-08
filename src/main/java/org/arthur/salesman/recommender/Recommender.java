@@ -38,7 +38,9 @@ public class Recommender implements Runnable {
         try {
             calculate();
         } catch (IOException e) {
-            System.err.println(e);
+            if (debug) {
+                System.err.println(e);
+            }
         }
     }
 
@@ -51,7 +53,9 @@ public class Recommender implements Runnable {
         List<String> articles = getUnRatedArticles();
 
         if (articles.isEmpty()) {
-            System.err.println("Nothing done because there is no items to evaluate");
+            if (debug) {
+                System.err.println("Nothing done because there is no items to evaluate");
+            }
             return;
         }
 
@@ -106,7 +110,9 @@ public class Recommender implements Runnable {
         }
 
         if (down == 0) {
-            System.err.println("The sum of similarities is zero and it is weird");
+            if (debug) {
+                System.err.println("The sum of similarities is zero and it is weird");
+            }
             return WRONG;
         }
 

@@ -1,17 +1,21 @@
 package org.arthur.salesman.runner;
 
+import org.apache.commons.lang3.StringUtils;
 import org.arthur.salesman.model.Citation;
 import org.arthur.salesman.model.Similar;
 import org.arthur.salesman.reader.CitationReader;
 import org.arthur.salesman.reader.MeansReader;
 import org.arthur.salesman.reader.SimilarityReader;
 import org.arthur.salesman.recommender.Recommender;
+import org.arthur.salesman.utils.Strings;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -25,14 +29,23 @@ public class RecommendationCalculator {
     private boolean debug;
     private int coreSize;
     private int maxSize;
+    private String citationsPath;
+    private String similarsPath;
+    private String meansFile;
+    private String target;
 
-    public RecommendationCalculator(boolean debug, int coreSize, int maxSize) {
+    public RecommendationCalculator(boolean debug, int coreSize, int maxSize,
+                                    String citationsPath, String similarsPath, String meansFile, String target) {
         this.debug = debug;
         this.coreSize = coreSize;
         this.maxSize = maxSize;
+        this.citationsPath = citationsPath;
+        this.similarsPath = similarsPath;
+        this.meansFile = meansFile;
+        this.target = target;
     }
 
-    public void execute(String citationsPath, String similarsPath, String meansFile, String target) throws Exception {
+    public void execute() throws Exception {
         BufferedWriter bw = null;
         try {
             Map<String, Double> means = MeansReader.readFile(meansFile);
@@ -88,13 +101,40 @@ public class RecommendationCalculator {
         }
     }
 
+    public static RecommendationCalculator getCalculator(Properties props, boolean debug) throws IOException {
+        String citations = props.getProperty("citations.path");
+        String similarity = props.getProperty("similarity.path");
+        String means = props.getProperty("means.path");
+        String target = props.getProperty("target.path");
+
+        int coreThreads = Integer.parseInt(props.getProperty("core.size"));
+        int maxThreads = Integer.parseInt(props.getProperty("max.size"));
+
+        if (StringUtils.isNoneBlank(citations, similarity, means, target)) {
+            System.out.println("Configurations are:\n\t" +
+                    Strings.join("\n\t", citations, similarity, means, target, coreThreads, maxThreads, debug)
+            );
+
+            RecommendationCalculator rc = new RecommendationCalculator(
+                    debug, coreThreads, maxThreads, citations, similarity, means, target
+            );
+
+            return rc;
+        } else {
+            System.err.println("To run usercf you need to specify citations.path, similarity.path, " +
+                    "means.path and target.path");
+            throw new IOException("missing parameters");
+        }
+    }
+
     public static void main(String... args) throws Exception {
-        new RecommendationCalculator(true, 3, 3).execute(
+        new RecommendationCalculator(
+                true, 3, 3,
                 "/home/arthur/work/data/normalized/citations_sample.csv",
                 "/home/arthur/work/data/normalized/similars_1line_sample.csv",
                 "/home/arthur/work/data/normalized/authors_means_24.csv",
                 "/home/arthur/work/data/normalized/exec_sample_test.csv"
-        );
+        ).execute();
     }
 
 }
