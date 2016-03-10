@@ -9,7 +9,9 @@ import org.arthur.salesman.reader.SimilarityReader;
 import org.arthur.salesman.recommender.Recommender;
 import org.arthur.salesman.utils.Strings;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,21 +34,24 @@ public class RecommendationCalculator {
     private String citationsPath;
     private String similarsPath;
     private String meansFile;
+    private String authors;
     private String target;
 
-    public RecommendationCalculator(boolean debug, int coreSize, int maxSize,
-                                    String citationsPath, String similarsPath, String meansFile, String target) {
+    public RecommendationCalculator(boolean debug, int coreSize, int maxSize, String citationsPath,
+                                    String similarsPath, String meansFile, String authors, String target) {
         this.debug = debug;
         this.coreSize = coreSize;
         this.maxSize = maxSize;
         this.citationsPath = citationsPath;
         this.similarsPath = similarsPath;
         this.meansFile = meansFile;
+        this.authors = authors;
         this.target = target;
     }
 
     public void execute() throws Exception {
         BufferedWriter bw = null;
+        BufferedReader br = null;
         try {
             Map<String, Double> means = MeansReader.readFile(meansFile);
             Map<String, List<Similar>> similarities = SimilarityReader.readFile(similarsPath);
@@ -56,8 +61,13 @@ public class RecommendationCalculator {
                     <Runnable>(1));
 
             bw = new BufferedWriter(new FileWriter(target));
-
-            for (String authorId : similarities.keySet()) {
+            br = new BufferedReader(new FileReader(authors));
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (!line.contains("\"")) {
+                    continue;
+                }
+                String authorId = line.replace("\"", "");
                 boolean running = false;
                 while (!running) {
                     try {
@@ -106,17 +116,18 @@ public class RecommendationCalculator {
         String similarity = props.getProperty("similarity.path");
         String means = props.getProperty("means.path");
         String target = props.getProperty("target.path");
+        String authors = props.getProperty("authors.path");
 
         int coreThreads = Integer.parseInt(props.getProperty("core.size"));
         int maxThreads = Integer.parseInt(props.getProperty("max.size"));
 
-        if (StringUtils.isNoneBlank(citations, similarity, means, target)) {
+        if (StringUtils.isNoneBlank(citations, similarity, means, target, authors)) {
             System.out.println("Configurations are:\n\t" +
-                    Strings.join("\n\t", citations, similarity, means, target, coreThreads, maxThreads, debug)
+                    Strings.join("\n\t", citations, similarity, means, authors, target, coreThreads, maxThreads, debug)
             );
 
             RecommendationCalculator rc = new RecommendationCalculator(
-                    debug, coreThreads, maxThreads, citations, similarity, means, target
+                    debug, coreThreads, maxThreads, citations, similarity, means, authors, target
             );
 
             return rc;
@@ -133,6 +144,7 @@ public class RecommendationCalculator {
                 "/home/arthur/work/data/normalized/citations_sample.csv",
                 "/home/arthur/work/data/normalized/similars_1line_sample.csv",
                 "/home/arthur/work/data/normalized/authors_means_24.csv",
+                "/home/arthur/work/data/normalized/authors_to_recommend.csv",
                 "/home/arthur/work/data/normalized/exec_sample_test.csv"
         ).execute();
     }
