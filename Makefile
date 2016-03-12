@@ -10,3 +10,4 @@ install: clean
 
 package: clean
 	mvn compile assembly:single
+	@cp target/salesman-java*.jar salesman.jar
