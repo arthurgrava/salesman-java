@@ -3,9 +3,14 @@ package org.arthur.salesman.evaluation;
 import java.util.List;
 
 /**
+ * This class will calculate the Mean Absolute Error (MAE) of a dataset, if you need to check the formula, there is
+ * plenty of papers talking about it.
+ *
  * @author Arthur Grava (arthur.grava at gmail.com) - 2016.03.11
  */
 public class Mae {
+
+    private Mae() { }
 
     public static double evaluate(List<Double> original, List<Double> predicted) throws Exception {
         if (original.size() != predicted.size()) {

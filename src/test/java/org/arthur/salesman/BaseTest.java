@@ -87,4 +87,23 @@ public class BaseTest {
         }
         return arry;
     }
+
+    public static List<String> getStringArray(int size) {
+        List<String> arry = new ArrayList<>(size);
+        for (int i = 0 ; i < size ; i++) {
+            arry.add(i + "");
+        }
+        return arry;
+    }
+
+    public static List<String> getStringArray(String... elements) {
+        List<String> arry = null;
+        if (elements != null && elements.length > 0) {
+            arry = new ArrayList<>(elements.length);
+            for (String element : elements) {
+                arry.add(element);
+            }
+        }
+        return arry;
+    }
 }
