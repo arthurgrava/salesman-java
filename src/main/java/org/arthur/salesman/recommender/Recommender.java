@@ -154,15 +154,17 @@ public class Recommender implements Runnable {
         List<Citation> rated = this.ratings.get(this.mainAuthor);
         List <String> unrated = new ArrayList<>();
 
-        for (Similar similar : this.similars) {
-            String authorId = similar.getAuthorId();
-            if (!this.ratings.containsKey(authorId)) {
-                continue;
-            }
-            if (rated != null) {
-                for (Citation citation : this.ratings.get(authorId)) {
-                    if (!rated.contains(citation) && !unrated.contains(citation.getArticleId())) {
-                        unrated.add(citation.getArticleId());
+        if (this.similars != null) {
+            for (Similar similar : this.similars) {
+                String authorId = similar.getAuthorId();
+                if (!this.ratings.containsKey(authorId)) {
+                    continue;
+                }
+                if (rated != null) {
+                    for (Citation citation : this.ratings.get(authorId)) {
+                        if (!rated.contains(citation) && !unrated.contains(citation.getArticleId())) {
+                            unrated.add(citation.getArticleId());
+                        }
                     }
                 }
             }
