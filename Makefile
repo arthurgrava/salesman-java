@@ -8,6 +8,7 @@ test:
 install: clean
 	mvn install
 
-package: clean
-	mvn compile assembly:single
+package:
+	@rm salesman.jar
+	mvn clean compile assembly:single
 	@cp target/salesman-java*.jar salesman.jar

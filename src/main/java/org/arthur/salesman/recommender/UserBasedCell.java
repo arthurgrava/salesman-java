@@ -24,7 +24,6 @@ public class UserBasedCell implements Runnable {
     private List<Similar> similars;
     private Map<String, Double> means;
     private BufferedWriter writer;
-    private boolean debug;
 
     private static final double WRONG = -999;
     private static final Logger LOG = LogManager.getLogger(UserBasedCell.class);
@@ -36,7 +35,6 @@ public class UserBasedCell implements Runnable {
         this.similars = similars;
         this.writer = bw;
         this.means = means;
-        this.debug = debug;
     }
 
     @Override
@@ -74,7 +72,7 @@ public class UserBasedCell implements Runnable {
 
         if (ratedItems == null) {
             ratedItems = Collections.emptyList();
-            LOG.debug("Author has no citations: " + this.mainAuthor);
+            LOG.info("Author has no citations: " + this.mainAuthor);
         } else if (this.similars == null) {
             LOG.error("No similar authors to this author, it is weird: " + this.mainAuthor);
             return Collections.emptyList();
@@ -82,10 +80,14 @@ public class UserBasedCell implements Runnable {
 
         Set<String> unratedItems = new HashSet<>();
 
+        LOG.info("fetch unrated items: " + this.mainAuthor + ", " + ratedItems.size() + ", " + this.similars.size());
+
         for (Similar similar : this.similars) {
             String similarId = similar.getAuthorId();
             if (this.ratings.containsKey(similarId)) {
-                for (Citation citation : this.ratings.get(similarId)) {
+                List<Citation> similarRatings = this.ratings.get(similarId);
+                LOG.info("Data: " + this.mainAuthor + "=" + ratedItems.size() + ", " + similarId + "=" + similarRatings.size());
+                for (Citation citation : similarRatings) {
                     if (!ratedItems.contains(citation)) {
                         unratedItems.add(citation.getArticleId());
                     }

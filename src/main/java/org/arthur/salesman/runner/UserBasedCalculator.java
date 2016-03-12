@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.arthur.salesman.model.Citation;
 import org.arthur.salesman.model.Similar;
 import org.arthur.salesman.reader.CitationReader;
+import org.arthur.salesman.reader.FullSimilarityReader;
 import org.arthur.salesman.reader.MeansReader;
 import org.arthur.salesman.reader.SimilarityReader;
 import org.arthur.salesman.recommender.UserBasedCell;
@@ -53,7 +54,7 @@ public class UserBasedCalculator {
         BufferedReader br = null;
         try {
             Map<String, Double> means = MeansReader.readFile(meansFile);
-            Map<String, List<Similar>> similarities = SimilarityReader.readFile(similarsPath);
+            Map<String, List<Similar>> similarities = FullSimilarityReader.readFile(similarsPath);
             Map<String, List<Citation>> citations = CitationReader.readFile(citationsPath);
 
             ThreadPoolExecutor tpe = new ThreadPoolExecutor(coreSize, maxSize, 1, TimeUnit.MILLISECONDS, new ArrayBlockingQueue
