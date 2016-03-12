@@ -1,7 +1,7 @@
 package org.arthur.salesman;
 
 import org.apache.commons.lang3.StringUtils;
-import org.arthur.salesman.runner.RecommendationCalculator;
+import org.arthur.salesman.runner.UserBasedCalculator;
 
 import java.io.FileReader;
 import java.util.Properties;
@@ -29,7 +29,7 @@ public class App {
             System.err.println("You must specify the app on your config file");
         } else {
             if ("usercf".equals(app)) {
-                RecommendationCalculator.getCalculator(props, isDebug()).execute();
+                UserBasedCalculator.getCalculator(props, isDebug()).execute();
             }
         }
     }

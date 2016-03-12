@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by tutu on 2/4/16.
  */
-public class RecommenderTest {
+public class UserBasedCellTest {
     private static Map<String, List<Citation>> citations;
     private static Map<String, List<Similar>> similars;
     private static Map<String, Double> means;
@@ -28,7 +28,7 @@ public class RecommenderTest {
     @Test
     public void testCase() {
         String authorId = citations.keySet().iterator().next();
-        Recommender rec = new Recommender(authorId, citations, similars.get(authorId), null, means, true);
+        UserBasedCell rec = new UserBasedCell(authorId, citations, similars.get(authorId), null, means, true);
         rec.run();
 
         Assert.assertTrue(1 == 1);

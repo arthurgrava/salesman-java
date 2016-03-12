@@ -6,7 +6,7 @@ import org.arthur.salesman.model.Similar;
 import org.arthur.salesman.reader.CitationReader;
 import org.arthur.salesman.reader.MeansReader;
 import org.arthur.salesman.reader.SimilarityReader;
-import org.arthur.salesman.recommender.Recommender;
+import org.arthur.salesman.recommender.UserBasedCell;
 import org.arthur.salesman.utils.Strings;
 
 import java.io.BufferedReader;
@@ -14,7 +14,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -26,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Arthur Grava (arthur at luizalabs.com).
  */
-public class RecommendationCalculator {
+public class UserBasedCalculator {
 
     private boolean debug;
     private int coreSize;
@@ -37,8 +36,8 @@ public class RecommendationCalculator {
     private String authors;
     private String target;
 
-    public RecommendationCalculator(boolean debug, int coreSize, int maxSize, String citationsPath,
-                                    String similarsPath, String meansFile, String authors, String target) {
+    public UserBasedCalculator(boolean debug, int coreSize, int maxSize, String citationsPath,
+                               String similarsPath, String meansFile, String authors, String target) {
         this.debug = debug;
         this.coreSize = coreSize;
         this.maxSize = maxSize;
@@ -79,7 +78,7 @@ public class RecommendationCalculator {
 
                         // calculates the recommendations
                         tpe.execute(
-                                new Recommender(
+                                new UserBasedCell(
                                         authorId, citations, similarities.get(authorId), bw, means, debug
                                 )
                         );
@@ -111,7 +110,7 @@ public class RecommendationCalculator {
         }
     }
 
-    public static RecommendationCalculator getCalculator(Properties props, boolean debug) throws IOException {
+    public static UserBasedCalculator getCalculator(Properties props, boolean debug) throws IOException {
         String citations = props.getProperty("citations.path");
         String similarity = props.getProperty("similarity.path");
         String means = props.getProperty("means.path");
@@ -126,7 +125,7 @@ public class RecommendationCalculator {
                     Strings.join("\n\t", citations, similarity, means, authors, target, coreThreads, maxThreads, debug)
             );
 
-            RecommendationCalculator rc = new RecommendationCalculator(
+            UserBasedCalculator rc = new UserBasedCalculator(
                     debug, coreThreads, maxThreads, citations, similarity, means, authors, target
             );
 
@@ -139,7 +138,7 @@ public class RecommendationCalculator {
     }
 
     public static void main(String... args) throws Exception {
-        new RecommendationCalculator(
+        new UserBasedCalculator(
                 true, 3, 3,
                 "/home/arthur/work/data/normalized/citations_sample.csv",
                 "/home/arthur/work/data/normalized/similars_1line_sample.csv",
