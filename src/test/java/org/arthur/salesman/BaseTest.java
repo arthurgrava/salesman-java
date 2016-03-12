@@ -68,4 +68,23 @@ public class BaseTest {
         }
         return citations;
     }
+
+    public static List<Double> getArray(String... elements) {
+        List<Double> arry = null;
+        if (elements != null && elements.length > 0) {
+            arry = new ArrayList<>(elements.length);
+            for (String element : elements) {
+                arry.add(Double.parseDouble(element));
+            }
+        }
+        return arry;
+    }
+
+    public static List<Double> getArray(int size) {
+        List<Double> arry = new ArrayList<>(size);
+        for (double i = 0.0 ; i < size ; i++) {
+            arry.add(i);
+        }
+        return arry;
+    }
 }
