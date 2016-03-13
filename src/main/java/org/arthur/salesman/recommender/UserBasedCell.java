@@ -3,7 +3,9 @@ package org.arthur.salesman.recommender;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.arthur.salesman.model.Citation;
+import org.arthur.salesman.model.Recommendation;
 import org.arthur.salesman.model.Similar;
+import org.arthur.salesman.model.Similarity;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -12,6 +14,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -25,6 +29,7 @@ public class UserBasedCell implements Runnable {
     private Map<String, Double> means;
     private BufferedWriter writer;
     private int topK;
+    private PriorityQueue<Recommendation> predictions;
 
     private static final double WRONG = -999;
     private static final Logger LOG = LogManager.getLogger(UserBasedCell.class);
@@ -50,16 +55,12 @@ public class UserBasedCell implements Runnable {
                 return;
             }
 
-            List<String> predictions = new ArrayList<>(unrated.size());
+            predictions = new PriorityQueue<>(this.topK);
             for (String item : unrated) {
                 double prediction = predict(item);
 
                 if (prediction != WRONG) {
-                    predictions.add(this.mainAuthor + "," + item + "," + prediction);
-
-                    if (predictions.size() >= topK) {
-                        break;
-                    }
+                    addPrediction(item, prediction);
                 }
             }
 
@@ -67,6 +68,18 @@ public class UserBasedCell implements Runnable {
         } catch (Exception e) {
             LOG.error("Some error, please check", e);
         }
+    }
+
+    private void addPrediction(String itemId, double prediction) {
+        if (this.predictions.size() >= this.topK ) {
+            Recommendation lower = this.predictions.peek();
+            if (lower.getScore() >= prediction) {
+                return;
+            }
+            this.predictions.remove();
+        }
+
+        this.predictions.add(new Recommendation(itemId, prediction));
     }
 
     /**
@@ -134,17 +147,18 @@ public class UserBasedCell implements Runnable {
         return getMean(this.mainAuthor) + (up / down);
     }
 
-    private void writeOnFile(List<String> predictions) throws IOException {
+    private void writeOnFile(Queue<Recommendation> predictions) throws IOException {
         if (this.writer != null) {
-            for (String line : predictions) {
+            for (Recommendation rec : predictions) {
+                String line = this.mainAuthor + "," + rec.getItemId() + "," + rec.getScore();
                 this.writer.write(line);
                 this.writer.newLine();
                 LOG.debug("prediction: " + line);
             }
             this.writer.flush();
         } else {
-            for (String line : predictions) {
-                System.out.println(line);
+            for (Recommendation rec : predictions) {
+                System.out.println(this.mainAuthor + "," + rec.getItemId() + "," + rec.getScore());
             }
         }
     }
@@ -173,6 +187,4 @@ public class UserBasedCell implements Runnable {
 
         return WRONG;
     }
-
-
 }
