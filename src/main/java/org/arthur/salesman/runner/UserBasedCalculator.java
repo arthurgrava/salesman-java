@@ -6,7 +6,6 @@ import org.arthur.salesman.model.Similar;
 import org.arthur.salesman.reader.CitationReader;
 import org.arthur.salesman.reader.FullSimilarityReader;
 import org.arthur.salesman.reader.MeansReader;
-import org.arthur.salesman.reader.SimilarityReader;
 import org.arthur.salesman.recommender.UserBasedCell;
 import org.arthur.salesman.utils.Strings;
 
@@ -36,9 +35,10 @@ public class UserBasedCalculator {
     private String meansFile;
     private String authors;
     private String target;
+    private int topK;
 
     public UserBasedCalculator(boolean debug, int coreSize, int maxSize, String citationsPath,
-                               String similarsPath, String meansFile, String authors, String target) {
+                               String similarsPath, String meansFile, String authors, String target, int topK) {
         this.debug = debug;
         this.coreSize = coreSize;
         this.maxSize = maxSize;
@@ -47,6 +47,7 @@ public class UserBasedCalculator {
         this.meansFile = meansFile;
         this.authors = authors;
         this.target = target;
+        this.topK = topK;
     }
 
     public void execute() throws Exception {
@@ -80,7 +81,7 @@ public class UserBasedCalculator {
                         // calculates the recommendations
                         tpe.execute(
                                 new UserBasedCell(
-                                        authorId, citations, similarities.get(authorId), bw, means, debug
+                                        authorId, citations, similarities.get(authorId), bw, means, topK
                                 )
                         );
                         running = true;
@@ -120,6 +121,7 @@ public class UserBasedCalculator {
 
         int coreThreads = Integer.parseInt(props.getProperty("core.size"));
         int maxThreads = Integer.parseInt(props.getProperty("max.size"));
+        int topK = Integer.parseInt(props.getProperty("top.k", "-1"));
 
         if (StringUtils.isNoneBlank(citations, similarity, means, target, authors)) {
             System.out.println("Configurations are:\n\t" +
@@ -127,7 +129,7 @@ public class UserBasedCalculator {
             );
 
             UserBasedCalculator rc = new UserBasedCalculator(
-                    debug, coreThreads, maxThreads, citations, similarity, means, authors, target
+                    debug, coreThreads, maxThreads, citations, similarity, means, authors, target, topK
             );
 
             return rc;
@@ -145,7 +147,8 @@ public class UserBasedCalculator {
                 "/home/arthur/work/data/normalized/similars_1line_sample.csv",
                 "/home/arthur/work/data/normalized/authors_means_24.csv",
                 "/home/arthur/work/data/normalized/authors_to_recommend.csv",
-                "/home/arthur/work/data/normalized/exec_sample_test.csv"
+                "/home/arthur/work/data/normalized/exec_sample_test.csv",
+                -1
         ).execute();
     }
 

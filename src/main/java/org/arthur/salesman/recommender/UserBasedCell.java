@@ -24,17 +24,20 @@ public class UserBasedCell implements Runnable {
     private List<Similar> similars;
     private Map<String, Double> means;
     private BufferedWriter writer;
+    private int topK;
 
     private static final double WRONG = -999;
     private static final Logger LOG = LogManager.getLogger(UserBasedCell.class);
+    private static final int DEFAULT_TOPK = 50;
 
     public UserBasedCell(String mainAuthor, Map<String, List<Citation>> ratings, List<Similar> similars,
-                         BufferedWriter bw, Map<String, Double> means, boolean debug) {
+                         BufferedWriter bw, Map<String, Double> means, int topK) {
         this.mainAuthor = mainAuthor;
         this.ratings = ratings;
         this.similars = similars;
         this.writer = bw;
         this.means = means;
+        this.topK = topK == -1 ? DEFAULT_TOPK : topK;
     }
 
     @Override
@@ -53,12 +56,16 @@ public class UserBasedCell implements Runnable {
 
                 if (prediction != WRONG) {
                     predictions.add(this.mainAuthor + "," + item + "," + prediction);
+
+                    if (predictions.size() >= topK) {
+                        break;
+                    }
                 }
             }
 
             writeOnFile(predictions);
         } catch (Exception e) {
-
+            LOG.error("Some error, please check", e);
         }
     }
 

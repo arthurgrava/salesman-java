@@ -1,6 +1,8 @@
 package org.arthur.salesman;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.arthur.salesman.runner.UserBasedCalculator;
 
 import java.io.FileReader;
@@ -12,14 +14,22 @@ import java.util.Properties;
 public class App {
 
     private static Properties props = new Properties();
+    private static Logger LOG = LogManager.getLogger(App.class);
 
     public static void main(String... args) throws Exception {
+        long start = System.currentTimeMillis();
+
         if (args.length > 1 && "--run".equals(args[0])) {
             props.load(new FileReader(args[1]));
             execute();
         } else {
             printHelp();
         }
+
+        long end = System.currentTimeMillis();
+
+        System.out.println("Took " + (end - start) + "ms to run the program");
+        LOG.info("Took " + (end - start) + "ms to run the program");
     }
 
     private static void execute() throws Exception {
