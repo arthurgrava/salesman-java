@@ -1,10 +1,23 @@
 package org.arthur.salesman.runner;
 
 import org.apache.commons.lang3.StringUtils;
+import org.arthur.salesman.evaluation.EvalCell;
+import org.arthur.salesman.model.Recommendation;
+import org.arthur.salesman.reader.RatingsReader;
+import org.arthur.salesman.recommender.UserBasedCell;
 import org.arthur.salesman.utils.Strings;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Arthur Grava (arthur.grava at gmail.com) - 2016.03.13
@@ -21,8 +34,60 @@ public class EvaluationCalculator {
         this.targetPath = targetPath;
     }
 
-    public void execute() {
+    public void execute(int coreSize, int maxSize) throws IOException {
+        BufferedWriter bw = null;
+        try {
+            Map<String, List<Recommendation>> realRatings = RatingsReader.readFile(testRatingsPath);
+            Map<String, List<Recommendation>> predictions = RatingsReader.readFile(predictionsPath);
 
+            bw = new BufferedWriter(new FileWriter(new File(targetPath)));
+
+            ThreadPoolExecutor tpe = new ThreadPoolExecutor(
+                    coreSize, maxSize, 1, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(1)
+            );
+
+            for (String userId : predictions.keySet()) {
+                boolean running = false;
+                while (!running) {
+                    try {
+                        int n = tpe.getMaximumPoolSize() - tpe.getActiveCount();
+                        if (n <= 1) {
+                            Thread.sleep(50);
+                            continue;
+                        }
+
+                        // calculates the recommendations
+                        tpe.execute(
+                                new EvalCell(userId, predictions.get(userId), realRatings.get(userId), bw)
+                        );
+                        running = true;
+                    } catch (RejectedExecutionException e) {
+                        // do nothing
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            while (tpe.getActiveCount() > 1) {
+                Thread.sleep(100);
+            }
+
+            tpe.shutdown();
+            tpe.awaitTermination(100, TimeUnit.MILLISECONDS);
+
+            while (!tpe.isTerminated()) {
+                Thread.sleep(100);
+            }
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            System.err.println(e);
+        } finally {
+            if (bw != null) {
+                bw.close();
+            }
+        }
     }
 
     public static EvaluationCalculator getCalculator(final Properties props) throws IOException {
@@ -33,7 +98,7 @@ public class EvaluationCalculator {
         if (StringUtils.isNoneBlank(testRatingsPath, predictionsPath, targetPath)) {
             System.out.println(
                     "Configurations are:\n\t" +
-                    Strings.join("\n\t", testRatingsPath, predictionsPath, targetPath)
+                            Strings.join("\n\t", testRatingsPath, predictionsPath, targetPath)
             );
 
             return new EvaluationCalculator(testRatingsPath, predictionsPath, targetPath);

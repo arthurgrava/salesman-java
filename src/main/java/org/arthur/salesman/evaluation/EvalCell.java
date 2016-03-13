@@ -3,10 +3,9 @@ package org.arthur.salesman.evaluation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.arthur.salesman.model.Recommendation;
+import org.arthur.salesman.utils.Doubles;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class EvalCell implements Runnable {
         this.authorId = authorId;
         this.predictions = predictions;
         this.ratings = ratings;
-        this.target = target;
+        this.target = bw;
     }
 
     @Override
@@ -57,9 +56,8 @@ public class EvalCell implements Runnable {
     private void sendResultsToFile() {
         if (target != null) {
             try {
-                String line = authorId + "," + sAtK + "," + mae + "," + rmse;
-                target.write(line);
-                target.newLine();
+                String line = authorId + "," + Doubles.round(sAtK, 5) + "," + Doubles.round(mae, 5) + "," + Doubles.round(rmse, 5);
+                target.write(line + "\n");
                 target.flush();
                 LOG.debug("Evaluation was: " + line);
             } catch (IOException e) {

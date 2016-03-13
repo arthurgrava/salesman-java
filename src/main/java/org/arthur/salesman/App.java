@@ -42,7 +42,9 @@ public class App {
             if ("usercf".equals(app)) {
                 UserBasedCalculator.getCalculator(props, isDebug()).execute();
             } else if ("evaluation".equals(app)) {
-                EvaluationCalculator.getCalculator(props).execute();
+                int coreThreads = Integer.parseInt(props.getProperty("core.size", "5"));
+                int maxThreads = Integer.parseInt(props.getProperty("max.size", "30"));
+                EvaluationCalculator.getCalculator(props).execute(coreThreads, maxThreads);
             }
         }
     }
