@@ -1,6 +1,7 @@
 package org.arthur.salesman.evaluation;
 
 import org.arthur.salesman.BaseTest;
+import org.arthur.salesman.model.Recommendation;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,19 +22,19 @@ public class ScoreAtKTest {
             Assert.assertTrue(1 == 1);
         }
         try {
-            ScoreAtK.evaluate(new ArrayList<String>(), null);
+            ScoreAtK.evaluate(new ArrayList<Recommendation>(), null);
             Assert.assertTrue(1 == 2);
         } catch (Exception e) {
             Assert.assertTrue(1 == 1);
         }
         try {
-            ScoreAtK.evaluate(null, new ArrayList<String>());
+            ScoreAtK.evaluate(null, new ArrayList<Recommendation>());
             Assert.assertTrue(1 == 2);
         } catch (Exception e) {
             Assert.assertTrue(1 == 1);
         }
         try {
-            ScoreAtK.evaluate(new ArrayList<String>(), new ArrayList<String>());
+            ScoreAtK.evaluate(new ArrayList<Recommendation>(), new ArrayList<Recommendation>());
             Assert.assertTrue(1 == 2);
         } catch (Exception e) {
             Assert.assertTrue(1 == 1);
@@ -42,8 +43,8 @@ public class ScoreAtKTest {
 
     @Test
     public void testShouldFindScoresAtK() throws Exception {
-        List<String> orig = BaseTest.getStringArray(5);
-        List<String> pred = BaseTest.getStringArray(4);
+        List<Recommendation> orig = BaseTest.getArray(5);
+        List<Recommendation> pred = BaseTest.getArray(4);
 
         double expected = .8;
         double score = ScoreAtK.evaluate(orig, pred);
@@ -53,8 +54,8 @@ public class ScoreAtKTest {
 
     @Test
     public void testShouldFindScoresAtKNotContainingAll() throws Exception {
-        List<String> orig = BaseTest.getStringArray("1", "x", "y", "z");
-        List<String> pred = BaseTest.getStringArray("z", "k", "1");
+        List<Recommendation> orig = BaseTest.getArray("1", "2", "3", "4");
+        List<Recommendation> pred = BaseTest.getArray("1", "4", "5");
 
         double expected = .5;
         double score = ScoreAtK.evaluate(orig, pred);

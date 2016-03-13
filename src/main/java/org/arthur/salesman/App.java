@@ -3,6 +3,7 @@ package org.arthur.salesman;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.arthur.salesman.runner.EvaluationCalculator;
 import org.arthur.salesman.runner.UserBasedCalculator;
 
 import java.io.FileReader;
@@ -40,6 +41,8 @@ public class App {
         } else {
             if ("usercf".equals(app)) {
                 UserBasedCalculator.getCalculator(props, isDebug()).execute();
+            } else if ("evaluation".equals(app)) {
+                EvaluationCalculator.getCalculator(props).execute();
             }
         }
     }

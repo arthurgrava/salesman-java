@@ -1,6 +1,7 @@
 package org.arthur.salesman;
 
 import org.arthur.salesman.model.Citation;
+import org.arthur.salesman.model.Recommendation;
 import org.arthur.salesman.model.Similar;
 
 import java.util.*;
@@ -69,21 +70,34 @@ public class BaseTest {
         return citations;
     }
 
-    public static List<Double> getArray(String... elements) {
-        List<Double> arry = null;
+    public static Recommendation getRecommendation(double score) {
+        return new Recommendation("item" + score, score);
+    }
+
+    public static List<Recommendation> getArray(Recommendation... elements) {
+        List<Recommendation> arry = null;
         if (elements != null && elements.length > 0) {
             arry = new ArrayList<>(elements.length);
-            for (String element : elements) {
-                arry.add(Double.parseDouble(element));
+            Collections.addAll(arry, elements);
+        }
+        return arry;
+    }
+
+    public static List<Recommendation> getArray(String... elements) {
+        List<Recommendation> arry = null;
+        if (elements != null && elements.length > 0) {
+            arry = new ArrayList<>(elements.length);
+            for (String score : elements) {
+                arry.add(getRecommendation(Double.parseDouble(score)));
             }
         }
         return arry;
     }
 
-    public static List<Double> getArray(int size) {
-        List<Double> arry = new ArrayList<>(size);
+    public static List<Recommendation> getArray(int size) {
+        List<Recommendation> arry = new ArrayList<>(size);
         for (double i = 0.0 ; i < size ; i++) {
-            arry.add(i);
+            arry.add(new Recommendation("item" + i, i));
         }
         return arry;
     }

@@ -1,5 +1,7 @@
 package org.arthur.salesman.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author Arthur Grava (arthur at luizalabs.com).
  */
@@ -51,5 +53,14 @@ public class Recommendation implements Comparable<Recommendation> {
         } else {
             return 0;
         }
+    }
+
+    private boolean equals(Recommendation rec) {
+        return StringUtils.isNotBlank(this.itemId) && this.itemId.equals(rec.itemId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return equals((Recommendation) obj);
     }
 }

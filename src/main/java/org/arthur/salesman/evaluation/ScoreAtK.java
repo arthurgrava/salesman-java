@@ -1,5 +1,7 @@
 package org.arthur.salesman.evaluation;
 
+import org.arthur.salesman.model.Recommendation;
+
 import java.util.List;
 
 /**
@@ -11,13 +13,13 @@ public class ScoreAtK {
 
     private ScoreAtK() { }
 
-    public static double evaluate(List<String> original, List<String> predicted) throws Exception {
+    public static double evaluate(List<Recommendation> original, List<Recommendation> predicted) throws Exception {
         if (original == null || original.size() == 0 || predicted == null || predicted.size() == 0) {
             throw new Exception("Problem with the given data");
         }
 
         double scores = .0;
-        for (String prediction : predicted) {
+        for (Recommendation prediction : predicted) {
             if (original.contains(prediction)) {
                 scores++;
             }

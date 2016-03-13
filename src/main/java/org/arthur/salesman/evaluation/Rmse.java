@@ -1,5 +1,7 @@
 package org.arthur.salesman.evaluation;
 
+import org.arthur.salesman.model.Recommendation;
+
 import java.util.List;
 
 /**
@@ -12,7 +14,7 @@ public class Rmse {
 
     private Rmse() { }
 
-    public static double evaluate(List<Double> original, List<Double> predicted) throws Exception {
+    public static double evaluate(List<Recommendation> original, List<Recommendation> predicted) throws Exception {
         return Math.sqrt(Mae.evaluate(original, predicted));
     }
 
