@@ -16,7 +16,7 @@ public class Mae {
 
     public static double evaluate(List<Recommendation> original, List<Recommendation> predicted) throws Exception {
         if (original.size() != predicted.size()) {
-            throw new Exception("Cannot calculate RMSE on vectors with different size");
+            throw new Exception("Cannot calculate MAE on vectors with different size");
         }
 
         double sum = 0.0;
@@ -24,6 +24,34 @@ public class Mae {
             sum += Math.pow((predicted.get(i).getScore() - original.get(i).getScore()), 2.0);
         }
         sum = (sum / Double.parseDouble(original.size() + ""));
+
+        return sum;
+    }
+
+    public static double evaluate(Recommendation[] original, Recommendation[] predicted) throws Exception {
+        if (original.length != predicted.length) {
+            throw new Exception("Cannot calculate MAE on vectors with different size");
+        }
+
+        double sum = .0;
+        for (int i = 0 ; i < original.length ; i++) {
+            sum += Math.pow((predicted[i].getScore() - original[i].getScore()), 2.0);
+        }
+        sum = (sum / Double.parseDouble(original.length + ""));
+
+        return sum;
+    }
+
+    public static double evaluate(double[] original, double[] predicted) throws Exception {
+        if (original.length != predicted.length) {
+            throw new Exception("Cannot calculate MAE on vectors with different size");
+        }
+
+        double sum = .0;
+        for (int i = 0 ; i < original.length ; i++) {
+            sum += Math.pow((predicted[i] - original[i]), 2.0);
+        }
+        sum = (sum / Double.parseDouble(original.length + ""));
 
         return sum;
     }

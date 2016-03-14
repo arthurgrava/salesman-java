@@ -42,10 +42,23 @@ public class EvalCell implements Runnable {
             this.sAtK = ScoreAtK.evaluate(this.ratings, this.predictions);
 
             this.ratings.retainAll(this.predictions);
-            this.predictions.retainAll(this.ratings);
 
-            this.mae = Mae.evaluate(ratings, predictions);
-            this.rmse = Rmse.evaluate(ratings, predictions);
+            double[] dRatings = new double[predictions.size()];
+            double[] dPredictions = new double[predictions.size()];
+
+            for (int i = 0 ; i < predictions.size() ; i++) {
+                Recommendation recommendation = predictions.get(i);
+                dPredictions[i] = recommendation.getScore();
+
+                if (ratings.contains(recommendation)) {
+                    dRatings[i] = ratings.get(ratings.indexOf(recommendation)).getScore();
+                } else {
+                    dRatings[i] = .0;
+                }
+            }
+
+            this.mae = Mae.evaluate(dRatings, dPredictions);
+            this.rmse = Rmse.evaluate(dRatings, dPredictions);
 
             sendResultsToFile();
         } catch (Exception e) {

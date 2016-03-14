@@ -17,5 +17,11 @@ public class Rmse {
     public static double evaluate(List<Recommendation> original, List<Recommendation> predicted) throws Exception {
         return Math.sqrt(Mae.evaluate(original, predicted));
     }
+    public static double evaluate(Recommendation[] original, Recommendation[] predicted) throws Exception {
+        return Math.sqrt(Mae.evaluate(original, predicted));
+    }
+    public static double evaluate(double[] original, double[] predicted) throws Exception {
+        return Math.sqrt(Mae.evaluate(original, predicted));
+    }
 
 }
