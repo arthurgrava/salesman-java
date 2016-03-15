@@ -53,7 +53,7 @@ public class Main {
         CoauthorsCalculator cc = new CoauthorsCalculator(
                 publicationsPath, nAuthors, nArticles, coauthorsPath, separator, debug
         );
-        cc.run();
+        cc.execute();
     }
 
     private static void runSimilarityApp(String... args) throws IOException {

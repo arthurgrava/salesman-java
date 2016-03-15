@@ -3,6 +3,7 @@ package org.arthur.salesman;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.arthur.salesman.runner.CoauthorsCalculator;
 import org.arthur.salesman.runner.EvaluationCalculator;
 import org.arthur.salesman.runner.UserBasedCalculator;
 
@@ -45,6 +46,8 @@ public class App {
                 int coreThreads = Integer.parseInt(props.getProperty("core.size", "5"));
                 int maxThreads = Integer.parseInt(props.getProperty("max.size", "30"));
                 EvaluationCalculator.getCalculator(props).execute(coreThreads, maxThreads);
+            } else if ("coauthors".equals(app)) {
+                CoauthorsCalculator.getCalculator(props).execute();
             }
         }
     }

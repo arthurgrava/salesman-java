@@ -1,11 +1,14 @@
 package org.arthur.salesman.runner;
 
+import org.apache.commons.lang3.StringUtils;
 import org.arthur.salesman.coauthors.CoauthorsSeeker;
+import org.arthur.salesman.utils.Strings;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -53,7 +56,26 @@ public class CoauthorsCalculator {
         }
     }
 
-    public void run() throws IOException {
+    public static CoauthorsCalculator getCalculator(Properties props) throws IOException {
+        String ratings = props.getProperty("ratings.path");
+        String coauthors = props.getProperty("target.path");
+        boolean debug = Boolean.getBoolean(props.getProperty("debug", "true"));
+
+        if (StringUtils.isNoneBlank(ratings, coauthors)) {
+            System.out.println(
+                    "Configurations are:\n\t" +
+                            Strings.join("\n\t", ratings, coauthors)
+            );
+            return new CoauthorsCalculator(ratings, 10000, 10000, coauthors, ",", debug);
+        } else {
+            System.out.println("Your configuration file must have:");
+            System.out.println("  * ratings.path\t--  Testing dataset");
+            System.out.println("  * target.path\t\t--  Target of coauthorship result\n\n");
+            throw new IOException("Missing parameters on the config file");
+        }
+    }
+
+    public void execute() throws IOException {
         CoauthorsSeeker cs = new CoauthorsSeeker(publicationsPath, nAuthors, nArticles, separator);
         System.out.println("Starting the calculation");
         cs.calculate(this.debug);
