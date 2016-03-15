@@ -4,6 +4,7 @@ import org.arthur.salesman.coauthors.CoauthorsSeeker;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -32,10 +33,10 @@ public class CoauthorsSeekerTest {
         Assert.assertTrue(cs.getCoauthorship().size() == numberOfAuthors);
         Assert.assertTrue(cs.getArticlesAuthors().size() == numberOfArticles);
 
-        Set<String> coauthors = cs.getCoauthorship().get("grava ap");
-        Assert.assertTrue(coauthors.contains("sardella sa"));
-        Assert.assertTrue(coauthors.contains("digiampietri la"));
-        Assert.assertTrue(coauthors.contains("forte n"));
+        Map<String, Integer> coauthors = cs.getCoauthorship().get("grava ap");
+        Assert.assertTrue(coauthors.containsKey("sardella sa"));
+        Assert.assertTrue(coauthors.containsKey("digiampietri la"));
+        Assert.assertTrue(coauthors.containsKey("forte n"));
     }
 
 }

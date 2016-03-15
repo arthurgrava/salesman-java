@@ -2,12 +2,14 @@ package org.arthur.salesman.runner;
 
 import org.apache.commons.lang3.StringUtils;
 import org.arthur.salesman.coauthors.CoauthorsSeeker;
+import org.arthur.salesman.model.Similar;
 import org.arthur.salesman.utils.Strings;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Properties;
 import java.util.Set;
 
@@ -17,6 +19,7 @@ import java.util.Set;
 public class CoauthorsCalculator {
 
     private static final String DEFAULT_SEPARATOR = ",";
+    private static final int DEFAULT_TOPK = 50;
 
     private String publicationsPath;
     private int nAuthors;
@@ -34,14 +37,31 @@ public class CoauthorsCalculator {
         this.debug = debug;
     }
 
-    public void printToFile(Map<String, Set<String>> coauthors) throws IOException {
+    public void printToFile(Map<String, Map<String, Integer>> coauthors) throws IOException {
         BufferedWriter bw = null;
 
         try {
             bw = new BufferedWriter(new FileWriter(this.coauthorsPath));
             for (String author : coauthors.keySet()) {
-                for (String coauthor : coauthors.get(author)) {
-                    bw.write(author + DEFAULT_SEPARATOR + coauthor);
+                PriorityQueue<Similar> topk = new PriorityQueue<>(DEFAULT_TOPK);
+
+                for (String coauthor : coauthors.get(author).keySet()) {
+                    int score = coauthors.get(author).get(coauthor);
+
+                    if (topk.size() >= DEFAULT_TOPK) {
+                        Similar tmp = topk.peek();
+
+                        if (tmp.getScore() < score) {
+                            topk.remove();
+                            topk.add(new Similar(coauthor, Double.parseDouble(score + "")));
+                        }
+                    } else {
+                        topk.add(new Similar(coauthor, Double.parseDouble(score + "")));
+                    }
+                }
+
+                for (Similar coauthor : topk) {
+                    bw.write(author + DEFAULT_SEPARATOR + coauthor.getAuthorId() + DEFAULT_SEPARATOR + coauthor.getScore());
                     bw.newLine();
                 }
                 bw.flush();
@@ -80,7 +100,7 @@ public class CoauthorsCalculator {
         System.out.println("Starting the calculation");
         cs.calculate(this.debug);
         System.out.println("It will save on file now");
-        Map<String, Set<String>> coauthors = cs.getCoauthorship();
+        Map<String, Map<String, Integer>> coauthors = cs.getCoauthorship();
         System.out.println("Starting to save on file");
         printToFile(coauthors);
         System.out.println("Saved on file");

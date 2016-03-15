@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public class CoauthorsSeeker {
 
-    private Map<String, Set<String>> coauthorship;
+    private Map<String, Map<String, Integer>> coauthorship;
     private Map<String, Set<String>> articlesAuthors;
     private String path;
     private String separator;
@@ -29,7 +29,7 @@ public class CoauthorsSeeker {
     public void createNewCoauthorshipList(String... authors) {
         for (String author : authors) {
             if (!this.coauthorship.containsKey(author)) {
-                this.coauthorship.put(author, new HashSet<String>());
+                this.coauthorship.put(author, new HashMap<String, Integer>());
             }
         }
     }
@@ -38,11 +38,13 @@ public class CoauthorsSeeker {
     TODO - Dar um peso a mais quando os autores citaram outros artigos em conjunto, somar 1 por exemplo
      */
     private void addCoauthor(String a, String b) {
-        Set<String> temp = this.coauthorship.get(a);
+        Map<String, Integer> temp = this.coauthorship.get(a);
 
-        if (!temp.contains(b)) {
-            temp.add(b);
+        int value = 1;
+        if (temp.containsKey(b)) {
+            value += temp.get(b);
         }
+        temp.put(b, value);
     }
 
     private void addCoauthors(String a, String b) {
@@ -98,7 +100,7 @@ public class CoauthorsSeeker {
         }
     }
 
-    public Map<String, Set<String>> getCoauthorship() {
+    public Map<String, Map<String, Integer>> getCoauthorship() {
         return coauthorship;
     }
 
