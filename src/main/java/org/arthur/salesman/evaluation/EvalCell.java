@@ -53,7 +53,7 @@ public class EvalCell implements Runnable {
                 if (ratings.contains(recommendation)) {
                     dRatings[i] = ratings.get(ratings.indexOf(recommendation)).getScore();
                 } else {
-                    dRatings[i] = .0;
+                    dRatings[i] = 1.0;
                 }
             }
 

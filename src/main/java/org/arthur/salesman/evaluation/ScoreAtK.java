@@ -18,14 +18,13 @@ public class ScoreAtK {
             throw new Exception("Problem with the given data");
         }
 
-        double scores = .0;
         for (Recommendation prediction : predicted) {
             if (original.contains(prediction)) {
-                scores++;
+                return 1.0;
             }
         }
 
-        return scores / original.size();
+        return .0;
     }
 
 }
