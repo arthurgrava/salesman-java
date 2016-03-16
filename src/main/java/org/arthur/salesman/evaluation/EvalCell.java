@@ -26,6 +26,7 @@ public class EvalCell implements Runnable {
     protected double sAtK;
     protected double mae;
     protected double rmse;
+    protected double mrr;
 
     private static final Logger LOG = LogManager.getLogger(EvalCell.class);
 
@@ -40,6 +41,7 @@ public class EvalCell implements Runnable {
     public void run() {
         try {
             this.sAtK = ScoreAtK.evaluate(this.ratings, this.predictions);
+            this.mrr = Mrr.evaluate(this.ratings, this.predictions);
 
             this.ratings.retainAll(this.predictions);
 
@@ -69,7 +71,7 @@ public class EvalCell implements Runnable {
     private void sendResultsToFile() {
         if (target != null) {
             try {
-                String line = authorId + "," + Doubles.round(sAtK, 5) + "," + Doubles.round(mae, 5) + "," + Doubles.round(rmse, 5);
+                String line = authorId + "," + Doubles.round(sAtK, 5) + "," + Doubles.round(mae, 5) + "," + Doubles.round(rmse, 5) + "," + Doubles.round(mrr, 5);
                 target.write(line + "\n");
                 target.flush();
                 LOG.debug("Evaluation was: " + line);
