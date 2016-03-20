@@ -21,9 +21,9 @@ public class EvalCellTest {
         EvalCell ec = new EvalCell("arthur", ratings, predictions, null);
         ec.run();
 
-        Assert.assertTrue(ec.mae > .0);
-        Assert.assertTrue(ec.rmse > .0);
-        Assert.assertTrue(ec.sAtK == 1.0);
+        Assert.assertTrue(ec.mae[0] > .0);
+        Assert.assertTrue(ec.rmse[0] > .0);
+        Assert.assertTrue(ec.sAtK[0] == 1.0);
     }
 
     private List<Recommendation> generateRatings(int size) {
