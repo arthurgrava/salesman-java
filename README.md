@@ -1,9 +1,15 @@
-### Salesman Java
+## Salesman Java
 
 Salesman Java version
 
-**Running the project**
+#### Running the project
 
 ```sh
 java -Xmx10000m -jar salesman.jar --run {config_file_path}
 ```
+
+---
+
+#### Score results
+
+To see results check [scores.md](scores.md)

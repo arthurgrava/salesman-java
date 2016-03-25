@@ -35,20 +35,24 @@ public class FullSimilarityReader {
                     continue;
                 }
 
-                String authorId = params[0].replace("\"", "");
-                String similarId = params[1].replace("\"", "");
-                double score = Double.parseDouble(params[2]);
+                try {
+                    String authorId = params[0].replace("\"", "");
+                    String similarId = params[1].replace("\"", "");
+                    double score = Double.parseDouble(params[2]);
 
-                if (!similarities.containsKey(authorId)) {
-                    similarities.put(authorId, new ArrayList<Similar>(30));
+                    if (!similarities.containsKey(authorId)) {
+                        similarities.put(authorId, new ArrayList<Similar>(30));
+                    }
+
+                    Similar similar = getSimilar(similarId, score);
+
+                    List<Similar> similars = similarities.get(authorId);
+                    similars.add(similar);
+
+                    similarities.put(authorId, similars);
+                } catch (Exception e) {
+                    System.err.println("Could not parse line: " + line + "\n\tERROR: " + e.toString());
                 }
-
-                Similar similar = getSimilar(similarId, score);
-
-                List<Similar> similars = similarities.get(authorId);
-                similars.add(similar);
-
-                similarities.put(authorId, similars);
             }
 
             return similarities;
