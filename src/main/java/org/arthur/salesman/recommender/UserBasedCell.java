@@ -135,8 +135,8 @@ public class UserBasedCell implements Runnable {
 
             if (ratedItem != WRONG) {
                 up += (similar.getScore() * (ratedItem - similarMean));
-                down += similar.getScore();
             }
+            down += similar.getScore();
         }
 
         if (down == 0) {

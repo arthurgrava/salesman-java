@@ -1,4 +1,4 @@
-### Scores
+### Scores :sparkles: :boom:
 
 **User Based Collaborative Filtering**
 

@@ -10,28 +10,27 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
+
 /**
- * Created by tutu on 2/4/16.
+ * @author Arthur Grava (arthur.grava at gmail.com) - 2016.03.25
  */
-public class UserBasedCellTest {
+public class TrustNetworkCellTest {
     private static Map<String, List<Citation>> citations;
     private static Map<String, List<Similar>> similars;
-    private static Map<String, Double> means;
 
     @BeforeClass
-    public static void settingUpThings() {
+    public static void settingUpThings() throws Exception {
         citations = BaseTest.mutate(BaseTest.setUpCitations());
         similars = BaseTest.setUpSimilars();
-        means = BaseTest.setUpMeans(citations);
     }
 
     @Test
-    public void testCase() {
-        String authorId = citations.keySet().iterator().next();
-        UserBasedCell rec = new UserBasedCell(authorId, citations, similars.get(authorId), null, means, -1);
-        rec.run();
+    public void testRun() throws Exception {
+        for (String authorId : citations.keySet()) {
+            TrustNetworkCell rec = new TrustNetworkCell(authorId, citations, similars.get(authorId), null, -1);
+            rec.run();
+        }
 
         Assert.assertTrue(1 == 1);
     }
-
 }

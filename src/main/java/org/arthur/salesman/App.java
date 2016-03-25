@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.arthur.salesman.runner.CoauthorsCalculator;
 import org.arthur.salesman.runner.EvaluationCalculator;
+import org.arthur.salesman.runner.TrustNetworkCalculator;
 import org.arthur.salesman.runner.UserBasedCalculator;
 
 import java.io.FileReader;
@@ -40,14 +41,17 @@ public class App {
         if (app == null) {
             System.err.println("You must specify the app on your config file");
         } else {
+            int coreThreads = Integer.parseInt(props.getProperty("core.size", "5"));
+            int maxThreads = Integer.parseInt(props.getProperty("max.size", "30"));
+
             if ("usercf".equals(app)) {
                 UserBasedCalculator.getCalculator(props, isDebug()).execute();
             } else if ("evaluation".equals(app)) {
-                int coreThreads = Integer.parseInt(props.getProperty("core.size", "5"));
-                int maxThreads = Integer.parseInt(props.getProperty("max.size", "30"));
                 EvaluationCalculator.getCalculator(props).execute(coreThreads, maxThreads);
             } else if ("coauthors".equals(app)) {
                 CoauthorsCalculator.getCalculator(props).execute();
+            } else if ("trustnet".equals(app)) {
+                TrustNetworkCalculator.getCalculator(props).execute(coreThreads, maxThreads);
             }
         }
     }
