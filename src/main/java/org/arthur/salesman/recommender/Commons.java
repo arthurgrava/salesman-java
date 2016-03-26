@@ -23,9 +23,7 @@ import java.util.Set;
  */
 public class Commons {
 
-    private Commons() { }
-
-    private static final Logger LOG = LogManager.getLogger(Commons.class);
+    private final Logger LOG = LogManager.getLogger(this);
     protected static final int WRONG = -999;
 
     /**
@@ -33,7 +31,7 @@ public class Commons {
      *
      * @return
      */
-    protected static List<String> fetchUnratedArticles(String authorId, Map<String, List<Citation>> ratings, List<Similar> similars) {
+    protected List<String> fetchUnratedArticles(String authorId, Map<String, List<Citation>> ratings, List<Similar> similars) {
         List<Citation> ratedItems = ratings.get(authorId);
 
         if (ratedItems == null) {
@@ -68,8 +66,8 @@ public class Commons {
      * Returns true if the prediction must be added on the {@param predictions} queue
      *
      * @param predictions top k predictions queue
-     * @param score new item prediction score
-     * @param topK top k accepted on the predictions queue
+     * @param score       new item prediction score
+     * @param topK        top k accepted on the predictions queue
      * @return true if we must insert the value, false otherwise
      */
     public static boolean canAdd(PriorityQueue<Recommendation> predictions, double score, int topK) {
@@ -85,11 +83,11 @@ public class Commons {
      * Appends the predicted values of this author to the target file
      *
      * @param predictions predictions for author
-     * @param authorId author id
-     * @param writer target file
+     * @param authorId    author id
+     * @param writer      target file
      * @throws IOException
      */
-    public static void putOnFile(PriorityQueue<Recommendation> predictions, String authorId, BufferedWriter writer) throws IOException {
+    public void putOnFile(PriorityQueue<Recommendation> predictions, String authorId, BufferedWriter writer) throws IOException {
         if (writer != null) {
             for (Recommendation rec : predictions) {
                 String line = authorId + "," + rec.getItemId() + "," + rec.getScore();
@@ -107,12 +105,12 @@ public class Commons {
     /**
      * Gets the rating of a similar user to {@link this.mainAuthor} on the specified item
      *
-     * @param authorId  Similar author
-     * @param item      Item to be rated
+     * @param authorId Similar author
+     * @param item     Item to be rated
      * @return
      */
-    public static double getRating(Map<String, List<Citation>> ratings, String authorId, String item) {
-        List<Citation> temp =ratings.get(authorId);
+    public double getRating(Map<String, List<Citation>> ratings, String authorId, String item) {
+        List<Citation> temp = ratings.get(authorId);
 
         if (temp != null && !temp.isEmpty()) {
             for (Citation citation : temp) {

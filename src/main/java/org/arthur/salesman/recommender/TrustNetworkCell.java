@@ -14,7 +14,7 @@ import java.util.PriorityQueue;
 /**
  * @author Arthur Grava (arthur.grava at gmail.com) - 2016.03.25
  */
-public class TrustNetworkCell implements Runnable {
+public class TrustNetworkCell extends Commons implements Runnable {
 
     private static final Logger LOG = LogManager.getLogger(TrustNetworkCell.class);
     private static final int DEFAULT_TOPK = 50;
@@ -38,7 +38,7 @@ public class TrustNetworkCell implements Runnable {
     @Override
     public void run() {
         try {
-            List<String> unrated = Commons.fetchUnratedArticles(authorId, ratings, trusted);
+            List<String> unrated = fetchUnratedArticles(authorId, ratings, trusted);
 
             if (unrated.isEmpty()) {
                 LOG.debug("There is no item to predict for user " + authorId);
@@ -54,7 +54,7 @@ public class TrustNetworkCell implements Runnable {
                 }
             }
 
-            Commons.putOnFile(predictions, authorId, writer);
+            putOnFile(predictions, authorId, writer);
         } catch (Exception e) {
             LOG.error("Some error occurred, please check", e);
         }
@@ -73,7 +73,7 @@ public class TrustNetworkCell implements Runnable {
         double down = .0;
 
         for (Similar sim : trusted) {
-            double simRate = Commons.getRating(ratings, sim.getAuthorId(), itemId);
+            double simRate = getRating(ratings, sim.getAuthorId(), itemId);
 
             if (simRate != Commons.WRONG) {
                 up += (sim.getScore() * simRate);
