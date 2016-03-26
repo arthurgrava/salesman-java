@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.arthur.salesman.runner.CoauthorsCalculator;
 import org.arthur.salesman.runner.EvaluationCalculator;
+import org.arthur.salesman.runner.EvaluationTwoCalculator;
 import org.arthur.salesman.runner.TrustNetworkCalculator;
 import org.arthur.salesman.runner.UserBasedCalculator;
 
@@ -52,6 +53,8 @@ public class App {
                 CoauthorsCalculator.getCalculator(props).execute();
             } else if ("trustnet".equals(app)) {
                 TrustNetworkCalculator.getCalculator(props).execute(coreThreads, maxThreads);
+            } else if ("evaluation_2".equals(app)) {
+                EvaluationTwoCalculator.getCalculator(props).execute(coreThreads, maxThreads);
             }
         }
     }

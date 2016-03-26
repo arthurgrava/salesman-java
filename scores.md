@@ -1,5 +1,9 @@
 ### Scores :sparkles: :boom:
 
+Neste caso estamos varrendo o conjunto de testes a partir do conjunto de predições
+
+---
+
 **User Based Collaborative Filtering**
 
 | Score | k=5 | k=10 | k=15 | k=20 | k=25 |

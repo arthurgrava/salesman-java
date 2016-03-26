@@ -12,4 +12,7 @@ java -Xmx10000m -jar salesman.jar --run {config_file_path}
 
 #### Score results
 
-To see results check [scores.md](scores.md)
+To see results check:
+
+  * [scores.md](scores.md)
+  * [scores_two.md](scores_two.md)
