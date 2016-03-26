@@ -31,3 +31,10 @@ Neste caso estamos varrendo o conjunto de testes a partir do conjunto de prediç
 |:-:|:-:|:-:|:-:|:-:|:-:|
 | S@K | 6.637 | 22.851 | 40.926 | 60.717 | 69.603|
 | MRR | 0.03074 | 0.06922 | 0.09977 | 0.12422 | 0.13901|
+
+**Hybrid Social filtering and Trust Network**
+
+| Score | k=5 | k=10 | k=15 | k=20 | k=25 |
+|:-:|:-:|:-:|:-:|:-:|:-:|
+| S@K | 8.794 | 23.468 | 36.694 | 51.405 | 59.089|
+| MRR | 0.04182 | 0.08225 | 0.10949 | 0.1308 | 0.14421|
