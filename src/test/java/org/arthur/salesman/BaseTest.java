@@ -102,6 +102,17 @@ public class BaseTest {
         return arry;
     }
 
+    public static Map<String, List<Recommendation>> getRecommendations(int nUsers) {
+        int size = nUsers > 0 ? nUsers : 10;
+
+        Map<String, List<Recommendation>> map = new HashMap<>(size);
+        for (int i = 1 ; i <= size ; i++) {
+            map.put("user " + i, getArray(10));
+        }
+
+        return map;
+    }
+
     public static List<String> getStringArray(int size) {
         List<String> arry = new ArrayList<>(size);
         for (int i = 0 ; i < size ; i++) {

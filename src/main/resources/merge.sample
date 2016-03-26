@@ -1,0 +1,10 @@
+# app configuration
+app=merge
+app.mode=picker
+
+# algorithms
+main.algorithm.path=/tmp/algA.csv
+secondary.algorithm.path=/tmp/algB.csv
+
+# target
+target.path=/tmp/hybrid_a_b.csv
