@@ -27,7 +27,7 @@ public class TrustNetworkCellTest {
     @Test
     public void testRun() throws Exception {
         for (String authorId : citations.keySet()) {
-            TrustNetworkCell rec = new TrustNetworkCell(authorId, citations, similars.get(authorId), null, -1);
+            TrustNetworkCell rec = new TrustNetworkCell(authorId, citations, similars.get(authorId), null, -1, 10);
             rec.run();
         }
 

@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.arthur.salesman.model.Citation;
 import org.arthur.salesman.model.Recommendation;
 import org.arthur.salesman.model.Similar;
-import org.arthur.salesman.model.Similarity;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -29,6 +28,7 @@ public class UserBasedCell implements Runnable {
     private Map<String, Double> means;
     private BufferedWriter writer;
     private int topK;
+    private int topN;
     private PriorityQueue<Recommendation> predictions;
 
     private static final double WRONG = -999;
@@ -36,13 +36,25 @@ public class UserBasedCell implements Runnable {
     private static final int DEFAULT_TOPK = 50;
 
     public UserBasedCell(String mainAuthor, Map<String, List<Citation>> ratings, List<Similar> similars,
-                         BufferedWriter bw, Map<String, Double> means, int topK) {
+                         BufferedWriter bw, Map<String, Double> means, int topK, int topN) {
         this.mainAuthor = mainAuthor;
         this.ratings = ratings;
-        this.similars = similars;
         this.writer = bw;
         this.means = means;
         this.topK = topK == -1 ? DEFAULT_TOPK : topK;
+        this.topN = topN;
+        this.similars = getTopNeighbors(similars, topN);
+    }
+
+    private List<Similar> getTopNeighbors(List<Similar> similars, int topN) {
+        if (similars == null) {
+            return new ArrayList<>(1);
+        }
+
+        Collections.sort(similars);
+        Collections.reverse(similars);
+
+        return similars.size() > topN ? similars.subList(0, topN) : similars;
     }
 
     @Override

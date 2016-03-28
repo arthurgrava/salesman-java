@@ -46,18 +46,7 @@ public class ScoreAtKTest {
         List<Recommendation> orig = BaseTest.getArray(5);
         List<Recommendation> pred = BaseTest.getArray(4);
 
-        double expected = .8;
-        double score = ScoreAtK.evaluate(orig, pred);
-
-        Assert.assertEquals(expected, score, .000000000001);
-    }
-
-    @Test
-    public void testShouldFindScoresAtKNotContainingAll() throws Exception {
-        List<Recommendation> orig = BaseTest.getArray("1", "2", "3", "4");
-        List<Recommendation> pred = BaseTest.getArray("1", "4", "5");
-
-        double expected = .5;
+        double expected = 1.0;
         double score = ScoreAtK.evaluate(orig, pred);
 
         Assert.assertEquals(expected, score, .000000000001);

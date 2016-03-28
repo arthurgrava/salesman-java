@@ -36,9 +36,10 @@ public class UserBasedCalculator {
     private String authors;
     private String target;
     private int topK;
+    private int topN;
 
     public UserBasedCalculator(boolean debug, int coreSize, int maxSize, String citationsPath,
-                               String similarsPath, String meansFile, String authors, String target, int topK) {
+                               String similarsPath, String meansFile, String authors, String target, int topK, int topN) {
         this.debug = debug;
         this.coreSize = coreSize;
         this.maxSize = maxSize;
@@ -48,6 +49,7 @@ public class UserBasedCalculator {
         this.authors = authors;
         this.target = target;
         this.topK = topK;
+        this.topN = topN;
     }
 
     public void execute() throws Exception {
@@ -81,7 +83,7 @@ public class UserBasedCalculator {
                         // calculates the recommendations
                         tpe.execute(
                                 new UserBasedCell(
-                                        authorId, citations, similarities.get(authorId), bw, means, topK
+                                        authorId, citations, similarities.get(authorId), bw, means, topK, topN
                                 )
                         );
                         running = true;
@@ -122,6 +124,7 @@ public class UserBasedCalculator {
         int coreThreads = Integer.parseInt(props.getProperty("core.size"));
         int maxThreads = Integer.parseInt(props.getProperty("max.size"));
         int topK = Integer.parseInt(props.getProperty("top.k", "-1"));
+        int topN = Integer.parseInt(props.getProperty("top.neighbors", "20"));
 
         if (StringUtils.isNoneBlank(citations, similarity, means, target, authors)) {
             System.out.println("Configurations are:\n\t" +
@@ -129,7 +132,7 @@ public class UserBasedCalculator {
             );
 
             UserBasedCalculator rc = new UserBasedCalculator(
-                    debug, coreThreads, maxThreads, citations, similarity, means, authors, target, topK
+                    debug, coreThreads, maxThreads, citations, similarity, means, authors, target, topK, topN
             );
 
             return rc;
@@ -148,7 +151,8 @@ public class UserBasedCalculator {
                 "/home/arthur/work/data/normalized/authors_means_24.csv",
                 "/home/arthur/work/data/normalized/authors_to_recommend.csv",
                 "/home/arthur/work/data/normalized/exec_sample_test.csv",
-                -1
+                -1,
+                20
         ).execute();
     }
 

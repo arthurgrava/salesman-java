@@ -27,9 +27,10 @@ public class UserBasedCellTest {
 
     @Test
     public void testCase() {
-        String authorId = citations.keySet().iterator().next();
-        UserBasedCell rec = new UserBasedCell(authorId, citations, similars.get(authorId), null, means, -1);
-        rec.run();
+        for (String authorId : citations.keySet()) {
+            UserBasedCell rec = new UserBasedCell(authorId, citations, similars.get(authorId), null, means, -1, 20);
+            rec.run();
+        }
 
         Assert.assertTrue(1 == 1);
     }

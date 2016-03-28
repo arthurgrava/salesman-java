@@ -7,6 +7,8 @@ import org.arthur.salesman.model.Recommendation;
 import org.arthur.salesman.model.Similar;
 
 import java.io.BufferedWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -24,15 +26,28 @@ public class TrustNetworkCell extends Commons implements Runnable {
     private List<Similar> trusted;
     private BufferedWriter writer;
     private int topK;
+    private int topN;
 
     private PriorityQueue<Recommendation> predictions;
 
-    public TrustNetworkCell(String authorId, Map<String, List<Citation>> ratings, List<Similar> trusted, BufferedWriter writer, int topK) {
+    public TrustNetworkCell(String authorId, Map<String, List<Citation>> ratings, List<Similar> trusted, BufferedWriter writer, int topK, int topN) {
         this.authorId = authorId;
         this.ratings = ratings;
-        this.trusted = trusted;
         this.writer = writer;
         this.topK = topK == -1 ? DEFAULT_TOPK : topK;
+        this.topN = topN;
+        this.trusted = getTopNeighbors(trusted, topN);
+    }
+
+    private List<Similar> getTopNeighbors(List<Similar> similars, int topN) {
+        if (similars == null) {
+            return new ArrayList<>(1);
+        }
+
+        Collections.sort(similars);
+        Collections.reverse(similars);
+
+        return similars.size() > topN ? similars.subList(0, topN) : similars;
     }
 
     @Override

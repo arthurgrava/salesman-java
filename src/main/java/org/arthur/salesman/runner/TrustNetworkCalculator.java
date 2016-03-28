@@ -31,13 +31,15 @@ public class TrustNetworkCalculator {
     private String authors;
     private String target;
     private int topK;
+    private int topN;
 
-    private TrustNetworkCalculator(String citationsPath, String trustPath, String authors, String target, int topK) {
+    private TrustNetworkCalculator(String citationsPath, String trustPath, String authors, String target, int topK, int topN) {
         this.citationsPath = citationsPath;
         this.trustPath = trustPath;
         this.authors = authors;
         this.target = target;
         this.topK = topK;
+        this.topN = topN;
     }
 
     public void execute(final int coreSize, final int maxSize) throws IOException {
@@ -69,7 +71,7 @@ public class TrustNetworkCalculator {
                         // calculates the recommendations
                         tpe.execute(
                                 new TrustNetworkCell(
-                                        authorId, citations, similarities.get(authorId), bw, topK
+                                        authorId, citations, similarities.get(authorId), bw, topK, topN
                                 )
                         );
                         running = true;
@@ -109,6 +111,7 @@ public class TrustNetworkCalculator {
         String targetPath = props.getProperty("target.path");
         String authorsPath = props.getProperty("authors.path");
         int topK = Integer.parseInt(props.getProperty("top.k", "-1"));
+        int topN = Integer.parseInt(props.getProperty("top.neighbors", "20"));
 
         if (StringUtils.isNoneBlank(citationsPath, trustPath, targetPath, authorsPath)) {
             System.out.println("Configurations are:\n\t" +
@@ -116,7 +119,7 @@ public class TrustNetworkCalculator {
             );
 
             TrustNetworkCalculator tnc = new TrustNetworkCalculator(
-                    citationsPath, trustPath, authorsPath, targetPath, topK
+                    citationsPath, trustPath, authorsPath, targetPath, topK, topN
             );
 
             return tnc;
