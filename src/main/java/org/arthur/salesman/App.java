@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.arthur.salesman.runner.CoauthorsCalculator;
+import org.arthur.salesman.runner.CoauthorsTimeContextCalculator;
 import org.arthur.salesman.runner.EvaluationCalculator;
 import org.arthur.salesman.runner.EvaluationTwoCalculator;
 import org.arthur.salesman.runner.MergeCalculator;
@@ -52,6 +53,8 @@ public class App {
                 EvaluationCalculator.getCalculator(props).execute(coreThreads, maxThreads);
             } else if ("coauthors".equals(app)) {
                 CoauthorsCalculator.getCalculator(props).execute();
+            }  else if ("time_context_coauthors".equals(app)) {
+                CoauthorsTimeContextCalculator.getCalculator(props).execute();
             } else if ("trustnet".equals(app)) {
                 TrustNetworkCalculator.getCalculator(props).execute(coreThreads, maxThreads);
             } else if ("evaluation_2".equals(app)) {

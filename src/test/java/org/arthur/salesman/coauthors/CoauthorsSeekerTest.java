@@ -4,6 +4,7 @@ import org.arthur.salesman.coauthors.CoauthorsSeeker;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,26 +18,30 @@ public class CoauthorsSeekerTest {
      */
     @Test
     public void testIfItWorks() {
-        String path = "/Users/tutu/personal/git/data/samples/publications.csv";
-        int numberOfAuthors = 5;
-        int numberOfArticles = 4;
+        String path = getResourcePath();
+        int numberOfAuthors = 3882;
+        int numberOfArticles = 799;
         String separator = ",";
 
         CoauthorsSeeker cs = new CoauthorsSeeker(path, numberOfAuthors, numberOfArticles, separator);
 
         try {
-            cs.calculate(true);
+            cs.calculate(false);
         } catch (Exception e) {
             Assert.fail();
         }
 
-        Assert.assertTrue(cs.getCoauthorship().size() == numberOfAuthors);
-        Assert.assertTrue(cs.getArticlesAuthors().size() == numberOfArticles);
+        Assert.assertEquals(numberOfAuthors, cs.getCoauthorship().size());
+        Assert.assertEquals(numberOfArticles, cs.getArticlesAuthors().size());
 
-        Map<String, Integer> coauthors = cs.getCoauthorship().get("grava ap");
-        Assert.assertTrue(coauthors.containsKey("sardella sa"));
-        Assert.assertTrue(coauthors.containsKey("digiampietri la"));
-        Assert.assertTrue(coauthors.containsKey("forte n"));
+        Map<String, Integer> coauthors = cs.getCoauthorship().get("campos rr");
+        Assert.assertTrue(coauthors.containsKey("tolentino-silva frp"));
+        Assert.assertTrue(coauthors.containsKey("mello leam"));
+    }
+
+    private String getResourcePath() {
+        File file = new File("src/main/resources/inline_publications.sample");
+        return file.getAbsolutePath();
     }
 
 }

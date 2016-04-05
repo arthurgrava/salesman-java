@@ -1,0 +1,8 @@
+wos_id,doi,authors,type,year,language,title,area,publisher,publisher_type,citations
+1,"doi 1","grava ap; sardella sa; forte nf","tipo","2014","english","las bananas","IA","P1","A1","too many"
+2,"doi 12","grava ap; sardella sa","tipo","2012","english","las bananas","IA","P1","A1","too many"
+3,"doi 13","grava ap; pinto em; forte nf","tipo","2013","english","las bananas","IA","P1","A1","too many"
+4,"doi 14","digiampietri la; grava ap","tipo","2011","english","las bananas","IA","P1","A1","too many"
+5,"doi 15","digiampietri la; forte nf","tipo","1990","english","las bananas","IA","P1","A1","too many"
+6,"doi 16","grava ap; pinto em; forte nf","tipo","2012","english","las bananas","IA","P1","A1","too many"
+7,"doi 17","grava ap; sardella sa","tipo","2009","english","las bananas","IA","P1","A1","too many"

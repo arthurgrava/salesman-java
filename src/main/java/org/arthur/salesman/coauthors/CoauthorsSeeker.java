@@ -34,9 +34,6 @@ public class CoauthorsSeeker {
         }
     }
 
-    /*
-    TODO - Dar um peso a mais quando os autores citaram outros artigos em conjunto, somar 1 por exemplo
-     */
     private void addCoauthor(String a, String b) {
         Map<String, Integer> temp = this.coauthorship.get(a);
 
