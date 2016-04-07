@@ -25,14 +25,18 @@ public class App {
 
     public static void main(String... args) throws Exception {
         long start = System.currentTimeMillis();
+        try {
 
-        if (args.length > 1 && "--run".equals(args[0])) {
-            props.load(new FileReader(args[1]));
-            execute();
-        } else {
-            printHelp();
+            if (args.length > 1 && "--run".equals(args[0])) {
+                props.load(new FileReader(args[1]));
+                execute();
+            } else {
+                printHelp();
+            }
+
+        } catch (Exception e) {
+            LOG.error("An error occurred, please check the log file", e);
         }
-
         long end = System.currentTimeMillis();
 
         System.out.println("Took " + (end - start) + "ms to run the program");

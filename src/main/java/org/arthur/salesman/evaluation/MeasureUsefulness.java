@@ -30,7 +30,7 @@ public class MeasureUsefulness implements Runnable {
 
         this.authorId = authorId;
         this.original = original;
-        this.predicted = predicted;
+        this.predicted = predicted != null ? predicted : new ArrayList<>(DEFAULT_PREDICTIONS);
         this.target = target;
     }
 
