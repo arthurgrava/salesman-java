@@ -9,6 +9,7 @@ import org.arthur.salesman.utils.Strings;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,6 +45,8 @@ public class Evaluation implements Runnable {
     public void run() {
         try {
             int size = 5;
+
+            Collections.sort(predictions);
 
             sAtK = new double[size];
             recall = new double[size];
