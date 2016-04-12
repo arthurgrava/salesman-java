@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.arthur.salesman.runner.CoauthorsCalculator;
 import org.arthur.salesman.runner.CoauthorsTimeContextCalculator;
 import org.arthur.salesman.runner.EvaluationCalculator;
+import org.arthur.salesman.runner.EvaluationThreeCalculator;
 import org.arthur.salesman.runner.EvaluationTwoCalculator;
 import org.arthur.salesman.runner.MergeCalculator;
 import org.arthur.salesman.runner.TrustNetworkCalculator;
@@ -68,6 +69,8 @@ public class App {
                 MergeCalculator.getCalculator(props).execute();
             } else if ("label_recommendations".equals(app)) {
                 UsefulnessCalculator.getCalculator(props).execute(coreThreads, maxThreads);
+            } else if ("evaluation_3".equals(app)) {
+                EvaluationThreeCalculator.getCalculator(props).execute(coreThreads, maxThreads);
             }
         }
     }
