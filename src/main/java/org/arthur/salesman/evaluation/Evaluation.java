@@ -19,10 +19,10 @@ import java.util.List;
  */
 public class Evaluation implements Runnable {
 
-    private List<Recommendation> predictions;
-    private List<Recommendation> ratings;
-    private String authorId;
-    private BufferedWriter target;
+    protected List<Recommendation> predictions;
+    protected List<Recommendation> ratings;
+    protected String authorId;
+    protected BufferedWriter target;
 
     protected double[] sAtK;
     protected double[] recall;
@@ -47,6 +47,7 @@ public class Evaluation implements Runnable {
             int size = 5;
 
             Collections.sort(predictions);
+            Collections.reverse(predictions);
 
             sAtK = new double[size];
             recall = new double[size];

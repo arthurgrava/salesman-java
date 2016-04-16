@@ -1,6 +1,5 @@
 package org.arthur.salesman.evaluation;
 
-import org.arthur.salesman.BaseTest;
 import org.arthur.salesman.model.Recommendation;
 import org.junit.Assert;
 import org.junit.Test;
