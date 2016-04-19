@@ -47,7 +47,10 @@ public class Evaluation implements Runnable {
             int size = 5;
 
             Collections.sort(predictions);
-            Collections.reverse(predictions);
+
+            if (predictions.size() > 1) {
+                Collections.reverse(predictions);
+            }
 
             sAtK = new double[size];
             recall = new double[size];
@@ -56,13 +59,12 @@ public class Evaluation implements Runnable {
 
             for (int i = 0 ; i < size ; i++) {
                 int k = (i + 1) * size;
-                List<Recommendation> ratingsTmp = sublist(ratings, k);
                 List<Recommendation> predictionsTmp = sublist(predictions, k);
 
-                sAtK[i] = ScoreAtK.evaluate(ratingsTmp, predictionsTmp);
-                mrr[i] = Mrr.evaluate(ratingsTmp, predictionsTmp);
-                recall[i] = Recall.evaluate(ratingsTmp, predictionsTmp);
-                precision[i] = Precision.evaluate(recall[i], k);
+                sAtK[i] = ScoreAtK.evaluate(ratings, predictionsTmp);
+                mrr[i] = Mrr.evaluate(ratings, predictionsTmp);
+                recall[i] = Recall2.evaluate(ratings, predictionsTmp);
+                precision[i] = Precision2.evaluate(recall[i], k);
             }
 
             putOnFile();
