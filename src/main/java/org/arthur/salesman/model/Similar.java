@@ -55,4 +55,15 @@ public class Similar implements Comparable<Similar> {
             return 0;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Similar)) return false;
+
+        Similar similar = (Similar) o;
+
+        return authorId.equals(similar.authorId);
+
+    }
 }

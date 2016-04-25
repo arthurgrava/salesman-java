@@ -9,6 +9,8 @@ import org.arthur.salesman.runner.EvaluationCalculator;
 import org.arthur.salesman.runner.EvaluationThreeCalculator;
 import org.arthur.salesman.runner.EvaluationTwoCalculator;
 import org.arthur.salesman.runner.MergeCalculator;
+import org.arthur.salesman.runner.SRSRunner;
+import org.arthur.salesman.runner.SRSStarRunner;
 import org.arthur.salesman.runner.TrustNetworkCalculator;
 import org.arthur.salesman.runner.UsefulnessCalculator;
 import org.arthur.salesman.runner.UserBasedCalculator;
@@ -71,6 +73,10 @@ public class App {
                 UsefulnessCalculator.getCalculator(props).execute(coreThreads, maxThreads);
             } else if ("evaluation_3".equals(app)) {
                 EvaluationThreeCalculator.getCalculator(props).execute(coreThreads, maxThreads);
+            } else if ("srs".equals(app)) {
+                SRSRunner.getCalculator(props, true).execute(coreThreads, maxThreads);
+            } else if ("srs_star".equals(app)) {
+                SRSStarRunner.getCalculator(props).execute(coreThreads, maxThreads);
             }
         }
     }
